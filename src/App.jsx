@@ -107,57 +107,138 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(false);
   const [questions, setQuestions] = useState(0);
+  // const [shuffleArr, setShuffleArr] = useState([])
 
-  useEffect(()=>{
+  useEffect(() => {
     axios("https://the-trivia-api.com/v2/questions")
-    .then(res =>{
-      console.log(res.data);
-      setQuizData(res.data)
-    })
-    .catch(err => {
-      console.log(err);
-      setErr(true)
-    })
-    .finally(()=>{
-      setLoading(false)
-    })
-  }, [])
+      .then((res) => {
+        console.log(res.data);
+        setQuizData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setErr(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
-  const nextQuestion = ()=>{
-    setQuestions(questions + 1)
+  const nextQuestion = () => {
+    if (questions < quizData.length - 1) {
+      setQuestions(questions + 1);
+    } else {
+      alert("Questions Finished");
+    }
+  };
+
+  /*
+  function shuffleArr(arr) {
+    const emptyArr = [];
+    const shuffle = []
+    for (let i = 0; i < arr.length; i++) {
+      const randomNum = Math.ceil(Math.random() * arr.length);
+      console.log(randomNum);
+      if (emptyArr.includes(randomNum)) {
+        // console.log("Number aleready exist");
+        i--
+      } else {
+        emptyArr.push(randomNum);
+        shuffle(randomNum) = arr[i]
+        // console.log(randomNum);
+      }
+    }
+    // return shuffle
+    console.log(shuffle);
+    
   }
+  shuffleArr([1, 2, 3, 4]);
+*/
+
+function shuffleArr(arr) {
+    const shuffleArray = []
+    const emptyArr = [];
+    for (let i = 0; i < arr.length; i++) {
+      const randomNum = Math.floor(Math.random() * arr.length);
+      if (emptyArr.includes(randomNum)) {
+        // console.log("Number aleready exist");
+        i--
+      } else {
+        emptyArr.push(randomNum);
+        // console.log(randomNum);
+        shuffleArray[randomNum] = arr[i]
+      }
+      
+    }
+    // console.log(shuffleArray);
+    return shuffleArray
+    
+  }
+
+
+  // const previousQuestion = ()=>{
+  //   setQuestions(questions - 1)
+  // }
   return (
     <>
       <div>
-        <h2>Quizz Application</h2>
+        <h2 >Quizz Application</h2>
         {loading && <h2>Loading........</h2>}
         {err && <h2>Error Occured.......</h2>}
 
-    {quizData ? 
-    <div style={{
-      border: '1px solid black',
-      margin: '10px',
-      padding: '10px 8px 10px 8px', 
-      borderRadius:'15px',
-      fontSize: '15px',
-      display: 'flex', 
-      flexDirection: 'column',
-      
-      flexWrap: 'wrap',
-      gap: '20px',
+        {quizData ? (
+          <div
+            style={{
+              border: "1px solid black",
+              margin: "10px",
+              // padding: '10px 8px 10px 8px',
+              padding: "20px",
+              borderRadius: "15px",
+              fontSize: "15px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignContent: "center",
+              alignSelf: "center",
+              flexWrap: "wrap",
+              gap: "4px",
+            }}
+          >
+            <h2>
+              Q{questions + 1}: {quizData[questions].question.text}
+            </h2>
 
-}}>
-      <h2>Q{questions + 1}: {quizData[questions].question.text}</h2>
-      <div style={{
-      
+            {shuffleArr([...quizData[questions].incorrectAnswers, quizData[questions].correctAnswer ]).map((item, index) => {
+              return (
+                <div key={`${item} - ${index}`}>
+                  <input type="radio" name="question" value={item} id={index} />
+                  <label htmlFor={index}>{item}</label>
+                </div>
+              );
+            })}
 
-      }}>
-        <button onClick={nextQuestion}>Next Question</button>
-        </div>
-      </div>
-      
-    : <h1>Searching for Data</h1>  
-  }
+            {/* <label htmlFor="correctAns">
+              <input
+                type="radio"
+                name="question"
+                value={quizData[questions].correctAnswer}
+                id="correctAns"
+              />
+              {quizData[questions].correctAnswer}
+            </label> */}
+
+            <button
+              style={{ width: "150px", margin: "0px auto" }}
+              onClick={nextQuestion}
+            >
+              Next Question
+            </button>
+            {/* <button style={{width:'150px', margin: '0px auto'}} onClick={previousQuestion}> Previous Question
+        </button> */}
+          </div>
+        ) : (
+          <h1>Searching for Data</h1>
+        )}
       </div>
     </>
   );
