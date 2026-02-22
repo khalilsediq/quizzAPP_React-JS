@@ -28,7 +28,7 @@ const QuizzApp = () => {
     //Next Question logic
     const nextQuestion = ()=>{
             const selecty = input.current.find(item => item && item.checked);
-    console.log(selecty.value);currentIndex
+    console.log(selecty.value);
         
         console.log(data[currentIndex].correctAnswer);
           question[currentIndex].correctAnswer === selecty.value ? setMarks(marks + 10) : null
