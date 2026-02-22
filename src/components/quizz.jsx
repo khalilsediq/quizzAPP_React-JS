@@ -9,6 +9,8 @@ const QuizzApp = () => {
     const [currentIndex, setIndex] = useState(0)
     const [result, setResult] = useState(false)
     const [marks, setMarks] = useState(0)
+
+    const input = useRef([])
     useEffect(()=>{
         axios.get('https://the-trivia-api.com/v2/questions')
         .then((res)=>{
@@ -31,7 +33,7 @@ const QuizzApp = () => {
     console.log(selecty.value);
         
         console.log(data[currentIndex].correctAnswer);
-          question[currentIndex].correctAnswer === selecty.value ? setMarks(marks + 10) : null
+          data[currentIndex].correctAnswer === selecty.value ? setMarks(marks + 10) : null
 
 
         setIndex(currentIndex + 1)
@@ -52,7 +54,7 @@ const QuizzApp = () => {
         //  ref={el => input.current[currentIndex] = el} 
          />
             <label htmlFor={index}>{item}</label> */}
-            <input type="radio" name='question' value={item} id={index} //ref={el => input.current[index] = el} 
+            <input type="radio" name='question' value={item} id={index} ref={el => input.current[index] = el} 
             />
             <label htmlFor={index}>{item}</label>
             </div>
